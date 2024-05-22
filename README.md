@@ -68,15 +68,15 @@ Swift 5.9 or later
 - Let's say you would like to concatanate some strings and you would like to test the outcomes.
 ```swift
 public class StringUtils {
-
     func concatenate(a: String, b: String) -> String {
         return a + b;
     }
-    
 }
 ```
 
-- Traditionaly in order to `UnitTest` the above with multiple provided strings it would look something like the below.  It tests, it's readable and more importantly it passes, but the main problem here is if you need to write multiple checks, now image the same thing but for different `Util` classes and so on. You can image how much code will end up being duplicated.
+### Traditionally, in order to `UnitTest` the above with multiple provided strings it would look something like the below.  It tests, it's readable and more importantly it passes, but the main problem here is if you need to write multiple checks, now image the same thing but for different `Util` classes and so on. You can imagine how much code will end up being duplicated.
+
+- 
 ```swift
     func testHellWorld() throws {
         // Arrange
@@ -110,45 +110,45 @@ public class StringUtils {
 
 ```swift
 func testConcatenate() throws {
-        // Arrange
-        let stringUtils = StringUtils()
-        let testCases: [(String, String, String)] = [
-            ("Hello", "World", "HelloWorld"),
-            ("Open", "AI", "OpenAI"),
-            ("", "Test", "Test")
-        ]
+    // Arrange
+    let stringUtils = StringUtils()
+    let testCases: [(String, String, String)] = [
+        ("Hello", "World", "HelloWorld"),
+        ("Open", "AI", "OpenAI"),
+        ("", "Test", "Test")
+    ]
 
-        // Act & Assert
-        for (a, b, expectedResult) in testCases {
-            let result = stringUtils.concatenate(a: a, b: b)
-            XCTAssertEqual(expectedResult, result)
-        }
+    // Act & Assert
+    for (a, b, expectedResult) in testCases {
+        let result = stringUtils.concatenate(a: a, b: b)
+        XCTAssertEqual(expectedResult, result)
     }
+}
 ```
 
 ### OR
 
 ```swift
  func testConcatenate() throws {
-        // Arrange
-        let stringUtils = StringUtils()
-        
-        // Act & Assert for each test case
-        performConcatenationTest(stringUtils: stringUtils, a: "Hello", b: "World", expectedResult: "HelloWorld")
-        performConcatenationTest(stringUtils: stringUtils, a: "Open", b: "AI", expectedResult: "OpenAI")
-        performConcatenationTest(stringUtils: stringUtils, a: "", b: "Test", expectedResult: "Test")
-    }
+    // Arrange
+    let stringUtils = StringUtils()
     
-    func performConcatenationTest(stringUtils: StringUtils, a: String, b: String, expectedResult: String) {
-        // Act
-        let result = stringUtils.concatenate(a: a, b: b)
-        
-        // Assert
-        XCTAssertEqual(expectedResult, result)
-    }
+    // Act & Assert for each test case
+    performConcatenationTest(stringUtils: stringUtils, a: "Hello", b: "World", expectedResult: "HelloWorld")
+    performConcatenationTest(stringUtils: stringUtils, a: "Open", b: "AI", expectedResult: "OpenAI")
+    performConcatenationTest(stringUtils: stringUtils, a: "", b: "Test", expectedResult: "Test")
+}
+
+func performConcatenationTest(stringUtils: StringUtils, a: String, b: String, expectedResult: String) {
+    // Act
+    let result = stringUtils.concatenate(a: a, b: b)
+    
+    // Assert
+    XCTAssertEqual(expectedResult, result)
 }
 ```
-- Now that we've seen the other ways of doing it how about we jump right in and I show you how you can do it using XCTParameterize
+
+### Now that we've seen some ways of doing it how about we jump right into it and I show you how you can do it using XCTParameterize
 
 ## Examples [How to use XCTParameterize]
 
@@ -172,38 +172,42 @@ public class StringUtilsTests: XCTestCase {
 }
 ```
 
-- The above will result in the follow macros being created
+### The above will result in the following macros being created
+
 ```swift
-    func testConcatenate_Test_Test() throws {
-        let a: String = ""
-        let b: String = "Test"
-        let expectedResult: String = "Test"
+func testConcatenate_Test_Test() throws {
+    let a: String = ""
+    let b: String = "Test"
+    let expectedResult: String = "Test"
 
-        let stringUtils = StringUtils()
-        let result = stringUtils.concatenate(a: a, b: b)
-        XCTAssertEqual(expectedResult, result)
-    }
-    func testConcatenate_Open_Ai_Openai() throws {
-        let a: String = "Open"
-        let b: String = "AI"
-        let expectedResult: String = "OpenAI"
+    let stringUtils = StringUtils()
+    let result = stringUtils.concatenate(a: a, b: b)
+    XCTAssertEqual(expectedResult, result)
+}
 
-        let stringUtils = StringUtils()
-        let result = stringUtils.concatenate(a: a, b: b)
-        XCTAssertEqual(expectedResult, result)
-    }
-    func testConcatenate_HelloWorld() throws {
-        let a: String = "Hello"
-        let b: String = "World"
-        let expectedResult: String = "HelloWorld"
+func testConcatenate_Open_Ai_Openai() throws {
+    let a: String = "Open"
+    let b: String = "AI"
+    let expectedResult: String = "OpenAI"
 
-        let stringUtils = StringUtils()
-        let result = stringUtils.concatenate(a: a, b: b)
-        XCTAssertEqual(expectedResult, result)
-    }
+    let stringUtils = StringUtils()
+    let result = stringUtils.concatenate(a: a, b: b)
+    XCTAssertEqual(expectedResult, result)
+}
+
+func testConcatenate_HelloWorld() throws {
+    let a: String = "Hello"
+    let b: String = "World"
+    let expectedResult: String = "HelloWorld"
+
+    let stringUtils = StringUtils()
+    let result = stringUtils.concatenate(a: a, b: b)
+    XCTAssertEqual(expectedResult, result)
+}
 ```
 
-- If you would like to give the method a specific name as long strings could end up giving the method name an unreadable name.
+### If you would like to give the method a specific name as long strings could end up giving the method name an unreadable name.
+
 ```swift
 import XCTParameterize
 
@@ -221,15 +225,17 @@ public class StringUtilsTests: XCTestCase {
     }
 }
 ```
-- The above will result in the follow macro being created
-```swift
-    func testConcatenate_Verify_HelloWorld() throws {
-        let a: String = "Hello"
-        let b: String = "World"
-        let expectedResult: String = "HelloWorld"
 
-        let stringUtils = StringUtils()
-        let result = stringUtils.concatenate(a: a, b: b)
-        XCTAssertEqual(expectedResult, result)
-    }
+### The above will result in the follow macro being created
+
+```swift
+func testConcatenate_Verify_HelloWorld() throws {
+    let a: String = "Hello"
+    let b: String = "World"
+    let expectedResult: String = "HelloWorld"
+
+    let stringUtils = StringUtils()
+    let result = stringUtils.concatenate(a: a, b: b)
+    XCTAssertEqual(expectedResult, result)
+}
 ```
